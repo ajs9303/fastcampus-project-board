@@ -89,6 +89,9 @@ fabric.properties
 #!.idea/codeStyles
 #!.idea/runConfigurations
 
+### Querydsl
+/src/main/generated
+
 ### Java ###
 # Compiled class file
 *.class
