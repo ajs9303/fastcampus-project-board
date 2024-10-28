@@ -1,15 +1,16 @@
 package com.fastcampus.projectboard.domain;
 
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import jakarta.persistence.*;
 import java.util.Objects;
 
 @Getter
 @ToString
 @Table(indexes = {
+        @Index(columnList = "userId", unique = true),
         @Index(columnList = "email", unique = true),
         @Index(columnList = "createdAt"),
         @Index(columnList = "createdBy")
@@ -35,6 +36,10 @@ public class UserAccount extends AuditingFields {
         this.email = email;
         this.nickname = nickname;
         this.memo = memo;
+    }
+
+    public static UserAccount of(String userId, String userPassword, String email, String nickname, String memo) {
+        return new UserAccount(userId, userPassword, email, nickname, memo);
     }
 
     public static UserAccount create(String userId, String userPassword, String email, String nickname, String memo) {
