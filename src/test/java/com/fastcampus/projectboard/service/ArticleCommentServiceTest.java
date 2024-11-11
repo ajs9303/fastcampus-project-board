@@ -143,7 +143,6 @@ class ArticleCommentServiceTest {
 
     private UserAccountDto createUserAccountDto() {
         return UserAccountDto.of(
-                1L,
                 "ajs9303",
                 "password",
                 "ajs9303@naver.com",
