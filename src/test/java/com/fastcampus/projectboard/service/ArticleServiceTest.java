@@ -130,7 +130,7 @@ class ArticleServiceTest {
         // Then
         assertThat(t)
                 .isInstanceOf(EntityNotFoundException.class)
-                .hasMessage("게시글이 없습니다 - articleId: " + articleId);
+                .hasMessage("게시글이 없습니다. - articleId: " + articleId);
         then(articleRepository).should().findById(articleId);
     }
 
@@ -274,13 +274,13 @@ class ArticleServiceTest {
     }
 
     private Article createArticle() {
-        Article article =  Article.of(
+        Article article = Article.of(
                 createUserAccount(),
                 "title",
                 "content",
                 "#java"
         );
-        ReflectionTestUtils.setField(article, "id", "1L");
+        ReflectionTestUtils.setField(article, "id", 1L);
 
         return article;
     }
