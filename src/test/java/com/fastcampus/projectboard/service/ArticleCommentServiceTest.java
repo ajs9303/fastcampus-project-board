@@ -2,6 +2,7 @@ package com.fastcampus.projectboard.service;
 
 import com.fastcampus.projectboard.domain.Article;
 import com.fastcampus.projectboard.domain.ArticleComment;
+import com.fastcampus.projectboard.domain.Hashtag;
 import com.fastcampus.projectboard.domain.UserAccount;
 import com.fastcampus.projectboard.dto.ArticleCommentDto;
 import com.fastcampus.projectboard.dto.UserAccountDto;
@@ -18,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -39,6 +41,7 @@ class ArticleCommentServiceTest {
         // Given
         Long articleId = 1L;
         ArticleComment expected = createArticleComment("content");
+
         given(articleCommentRepository.findByArticle_Id(articleId)).willReturn(List.of(expected));
 
         // When
@@ -56,6 +59,7 @@ class ArticleCommentServiceTest {
     void givenArticleCommentInfo_whenSavingArticleComment_thenSavesArticleComment() {
         // Given
         ArticleCommentDto dto = createArticleCommentDto("댓글");
+
         given(articleRepository.getReferenceById(dto.articleId())).willReturn(createArticle());
         given(userAccountRepository.getReferenceById(dto.userAccountDto().userId())).willReturn(createUserAccount());
         given(articleCommentRepository.save(any(ArticleComment.class))).willReturn(null);
@@ -74,6 +78,7 @@ class ArticleCommentServiceTest {
     void givenNonexistentArticle_whenSavingArticleComment_thenLogsSituationAndDoesNothing() {
         // Given
         ArticleCommentDto dto = createArticleCommentDto("댓글");
+
         given(articleRepository.getReferenceById(dto.articleId())).willThrow(EntityNotFoundException.class);
 
         // When
@@ -93,6 +98,7 @@ class ArticleCommentServiceTest {
         String updatedContent = "댓글";
         ArticleComment articleComment = createArticleComment(oldContent);
         ArticleCommentDto dto = createArticleCommentDto(updatedContent);
+
         given(articleCommentRepository.getReferenceById(dto.id())).willReturn(articleComment);
 
         // When
@@ -110,6 +116,7 @@ class ArticleCommentServiceTest {
     void givenNonexistentArticleComment_whenUpdatingArticleCommeent_thenLogsWarningAndDoesNothing() {
         // Given
         ArticleCommentDto dto = createArticleCommentDto("댓글");
+
         given(articleCommentRepository.getReferenceById(dto.id())).willThrow(EntityNotFoundException.class);
 
         // When
@@ -125,6 +132,7 @@ class ArticleCommentServiceTest {
         // Given
         Long articleCommentId = 1L;
         String userId = "ajs9303";
+
         willDoNothing().given(articleCommentRepository).deleteByIdAndUserAccount_UserId(articleCommentId, userId);
 
         // When
@@ -163,7 +171,7 @@ class ArticleCommentServiceTest {
 
     private ArticleComment createArticleComment(String content) {
         return ArticleComment.of(
-                Article.of(createUserAccount(), "title", "content", "hashtag"),
+                createArticle(),
                 createUserAccount(),
                 content
         );
@@ -180,11 +188,17 @@ class ArticleCommentServiceTest {
     }
 
     private Article createArticle() {
-        return Article.of(
+        Article article = Article.of(
                 createUserAccount(),
                 "title",
-                "content",
-                "#java"
+                "content"
         );
+        article.addHashtags(Set.of(createHashtag(article)));
+
+        return article;
+    }
+
+    private Hashtag createHashtag(Article article) {
+        return Hashtag.of("java");
     }
 }
