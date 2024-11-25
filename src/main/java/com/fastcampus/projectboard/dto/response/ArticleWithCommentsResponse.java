@@ -41,7 +41,7 @@ public record ArticleWithCommentsResponse(
                 dto.userAccountDto().email(),
                 nickname,
                 dto.userAccountDto().userId(),
-                organizeChildComments(dto.articleCommentsDtos())
+                organizeChildComments(dto.articleCommentDtos())
         );
     }
 
@@ -63,7 +63,7 @@ public record ArticleWithCommentsResponse(
                         new TreeSet<>(Comparator
                                 .comparing(ArticleCommentResponse::createdAt)
                                 .reversed()
-                                .thenComparing(ArticleCommentResponse::id)
+                                .thenComparingLong(ArticleCommentResponse::id)
                         )
                 ));
     }
